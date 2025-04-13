@@ -1,0 +1,67 @@
+---
+description: rule to helpmprove intellichat
+globs: 
+alwaysApply: false
+---
+
+Please help me set up a TypeScript application that uses **ChromaDB** as a vector database and **OpenAI** for generating final answers. The app should allow users to upload files, which will be indexed in Chroma. When users query the app, it should retrieve the most relevant information from Chroma, then use OpenAI to compose a final answer.
+
+**New Requirement**:
+- We have an `/admin` page where users can register to become admins.
+- Admins can log in to the admin panel.
+- The admin panel should display live stats for the 'intellichat' app.
+- The admin panel should include a section for uploading files to be stored and indexed in ChromaDB.
+
+**Requirements & Steps**:
+
+1. **Installation**:
+   - Run the following to install required packages:
+     ```
+     yarn add chromadb chromadb-default-embed
+     ```
+
+2. **Chroma Client Setup**:
+   - Create a client connection to Chroma.
+   - Ensure a collection is either created or loaded.
+
+3. **Admin Page**:
+   - Implement an `/admin` route.
+   - Include a user registration flow for becoming an admin.
+   - Implement admin login functionality.
+   - Once logged in, display:
+     - Live stats for the 'intellichat' app (e.g., number of queries, usage analytics, etc.).
+     - A file upload form to index new files in ChromaDB.
+
+4. **File Upload & Document Ingestion**:
+   - Frontend: Provide a button or form to upload a file (e.g., .txt, .csv) on the admin panel.
+   - Backend: On file upload, parse the file contents. Insert these contents into the ChromaDB collection as documents.
+
+5. **Query Endpoint**:
+   - Create a route that accepts a user's query (non-admin users can query).
+   - Search your ChromaDB collection for the most relevant documents to the query.
+   - Use these documents as context for OpenAI's API (chat completions).
+   - Return the OpenAI-generated answer to the user.
+
+6. **Implementation Details**:
+   - Use TypeScript for both frontend and backend.
+   - For the backend, you can use Node.js + Express/Fastify.
+   - For the frontend, you can use React.
+   - Use `.env` for managing your OpenAI API key and any other secrets.
+   - Handle errors gracefully (e.g., file parsing, API calls, or Chroma operations).
+
+7. **Proposed File Structure**:
+   - `chromadbClient.ts` - Manages the ChromaDB client and collections.
+   - `uploadHandler.ts` - Processes file uploads and adds data to Chroma.
+   - `queryHandler.ts` - Accepts a question, searches Chroma, calls OpenAI, and returns the final answer.
+   - `admin.tsx` (or similar) - React component that provides:
+     - Admin registration and login functionality.
+     - Live stats of 'intellichat'.
+     - File upload form for indexing new data in ChromaDB.
+   - `App.tsx` (or similar) - Main frontend component with normal user features (e.g., querying).
+
+8. **Goal**:
+   - A fully working TypeScript-based system where:
+     - Admins can register, log in, view live stats, and upload files to be stored in ChromaDB.
+     - Non-admin users can ask questions → system fetches relevant data from Chroma → calls OpenAI → returns the final AI-crafted answer.
+
+Please provide all necessary code (TypeScript) for these steps, including examples of how to configure the client, handle uploads, integrate the default embedding, and query OpenAI."
