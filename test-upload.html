@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test File Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+        }
+        .progress {
+            height: 20px;
+            background-color: #f3f3f3;
+            margin: 10px 0;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test File Upload</h1>
+    <form id="uploadForm">
+        <div class="form-group">
+            <label for="file">Select File:</label>
+            <input type="file" id="file" name="file" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="documentType">Document Type:</label>
+            <select id="documentType" name="documentType">
+                <option value="general">General</option>
+                <option value="product">Product</option>
+                <option value="manual">Manual</option>
+                <option value="specifications">Specifications</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="processForRag">
+                <input type="checkbox" id="processForRag" name="processForRag" value="true">
+                Process for RAG
+            </label>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit">Upload File</button>
+        </div>
+    </form>
+    
+    <div class="progress" id="progressContainer">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+    
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('file');
+            const documentType = document.getElementById('documentType').value;
+            const processForRag = document.getElementById('processForRag').checked;
+            
+            if (fileInput.files.length === 0) {
+                document.getElementById('result').textContent = 'Please select a file';
+                return;
+            }
+            
+            formData.append('file', fileInput.files[0]);
+            formData.append('documentType', documentType);
+            if (processForRag) {
+                formData.append('processForRag', 'true');
+            }
+            
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            progressContainer.style.display = 'block';
+            
+            try {
+                // Simulated progress for better UX
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    if (progress <= 90) {
+                        progressBar.style.width = progress + '%';
+                        progressBar.textContent = progress + '%';
+                    }
+                }, 500);
+                
+                const response = await fetch('http://localhost:3001/api/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer dummy-token'
+                    },
+                    body: formData
+                });
+                
+                clearInterval(progressInterval);
+                
+                if (!response.ok) {
+                    let errorMessage = `Failed to upload file: ${response.statusText || response.status}`;
+                    
+                    try {
+                        if (response.headers.get("content-type")?.includes("application/json")) {
+                            const errorData = await response.json();
+                            errorMessage = errorData.error || errorMessage;
+                            if (errorData.details) {
+                                errorMessage += `\nDetails: ${errorData.details}`;
+                            }
+                        } else {
+                            const textError = await response.text();
+                            if (textError) {
+                                errorMessage = `${errorMessage}. Details: ${textError.substring(0, 100)}...`;
+                            }
+                        }
+                    } catch (parseError) {
+                        console.error("Error parsing error response:", parseError);
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+                
+                progressBar.style.width = '100%';
+                progressBar.textContent = '100%';
+                
+                const result = await response.json();
+                document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                progressContainer.style.display = 'none';
+                document.getElementById('result').textContent = error.message || 'Unknown error occurred';
+            }
+        });
+    </script>
+</body>
+</html> 

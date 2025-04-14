@@ -6,19 +6,45 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function streamToString(stream: ReadableStream): Promise<string> {
-  const reader = stream.getReader()
-  const decoder = new TextDecoder()
-  let result = ""
-
-  return reader.read().then(function process({ done, value }): Promise<string> | string {
-    if (done) {
-      return result
+// Updated streamToString function that always returns a string
+export async function streamToString(stream: ReadableStream): Promise<string> {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  
+  // Read all chunks from the stream
+  try {
+    let done = false;
+    while (!done) {
+      const { done: isDone, value } = await reader.read();
+      done = isDone;
+      if (value) {
+        chunks.push(value);
+      }
     }
-
-    result += decoder.decode(value, { stream: true })
-    return reader.read().then(process)
-  })
+    
+    // Combine all chunks into a single buffer
+    const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+    const buffer = new Uint8Array(totalLength);
+    
+    let offset = 0;
+    for (const chunk of chunks) {
+      buffer.set(chunk, offset);
+      offset += chunk.length;
+    }
+    
+    // For binary data, convert to base64 string
+    try {
+      const decoder = new TextDecoder();
+      return decoder.decode(buffer);
+    } catch (error) {
+      console.error("Error decoding stream as text:", error);
+      // Convert binary data to base64 string
+      return Buffer.from(buffer).toString('base64');
+    }
+  } catch (error) {
+    console.error("Error reading stream:", error);
+    throw new Error(`Failed to read stream: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
 }
 
 // Determine file type from filename
@@ -27,7 +53,7 @@ export function getFileType(filename: string): string {
   
   switch (ext) {
     case 'txt':
-      return 'text'
+      return 'txt'
     case 'csv':
       return 'csv'
     case 'md':
@@ -36,6 +62,9 @@ export function getFileType(filename: string): string {
       return 'json'
     case 'pdf':
       return 'pdf'
+    case 'xlsx':
+    case 'xls':
+      return 'xlsx'
     case 'docx':
       return 'docx'
     default:
@@ -129,5 +158,45 @@ export function getFileMetadata(filename: string, fileType: string, fileSize: nu
     fileSize,
     uploadedAt: new Date().toISOString(),
   }
+}
+
+/**
+ * Checks if the content is a valid PDF by verifying the signature
+ * @param content The content to check
+ * @returns boolean indicating if the content is a valid PDF
+ */
+export function isValidPdf(content: Buffer | string): boolean {
+  // Convert to buffer if it's a string
+  const buffer = typeof content === 'string' ? Buffer.from(content) : content;
+  
+  // Check for PDF signature: "%PDF-"
+  if (buffer.length < 5) {
+    return false;
+  }
+  
+  // Check for PDF signature (magic number)
+  return buffer[0] === 0x25 && // %
+         buffer[1] === 0x50 && // P
+         buffer[2] === 0x44 && // D
+         buffer[3] === 0x46 && // F
+         buffer[4] === 0x2D;   // -
+}
+
+/**
+ * Ensures we have a Buffer from string or Buffer
+ * @param data The content to convert to Buffer
+ * @returns Buffer
+ */
+export function ensureBuffer(data: string | Buffer): Buffer {
+  if (Buffer.isBuffer(data)) {
+    return data;
+  }
+  
+  if (typeof data === 'string') {
+    return Buffer.from(data);
+  }
+  
+  // Should not happen with correct typing, but as a fallback
+  throw new Error("Invalid data type provided to ensureBuffer");
 }
 

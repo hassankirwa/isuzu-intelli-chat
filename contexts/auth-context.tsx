@@ -28,9 +28,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (username: string, password: string) => {
     // Check if it's the default admin account
     if (username === "admin" && password === "admin123") {
-      localStorage.setItem("admin-token", "dummy-token")
-      setIsAuthenticated(true)
-      return true
+      // Use the same token value that's used as fallback in API routes
+      localStorage.setItem("admin-token", "admin-token-test-123");
+      
+      // Also set a cookie for middleware to check
+      document.cookie = `admin-token=true; path=/; max-age=${60 * 60 * 24 * 7}`; // 1 week
+      
+      // Call NextAuth signIn function if available
+      try {
+        // Attempt to sign in with NextAuth - no redirect
+        const signInModule = await import('next-auth/react');
+        await signInModule.signIn("credentials", {
+          username,
+          password,
+          redirect: false,
+        });
+      } catch (error) {
+        console.error("NextAuth signin error:", error);
+        // Continue even if NextAuth fails
+      }
+      
+      setIsAuthenticated(true);
+      return true;
     }
     
     // Check for registered admins in localStorage
@@ -41,10 +60,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       )
       
       if (admin) {
-        localStorage.setItem("admin-token", "dummy-token")
-        localStorage.setItem("current-admin", username)
-        setIsAuthenticated(true)
-        return true
+        // Use the same token value that's used as fallback in API routes
+        localStorage.setItem("admin-token", "admin-token-test-123");
+        localStorage.setItem("current-admin", username);
+        
+        // Also set a cookie for middleware to check
+        document.cookie = `admin-token=true; path=/; max-age=${60 * 60 * 24 * 7}`; // 1 week
+        
+        // Call NextAuth signIn function if available
+        try {
+          // Attempt to sign in with NextAuth - no redirect
+          const signInModule = await import('next-auth/react');
+          await signInModule.signIn("credentials", {
+            username,
+            password,
+            redirect: false,
+          });
+        } catch (error) {
+          console.error("NextAuth signin error:", error);
+          // Continue even if NextAuth fails
+        }
+        
+        setIsAuthenticated(true);
+        return true;
       }
     } catch (error) {
       console.error("Error checking admin credentials:", error)

@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AnalyticsCard } from "@/components/admin/analytics-card"
 import { MessagesTable } from "@/components/admin/messages-table"
 import { BarChart, PieChart } from "@/components/ui/charts"
-import { RefreshCw, Download, Trash2, Upload, Database, AlertCircle, CheckCircle } from "lucide-react"
+import { RefreshCw, Download, Trash2, Upload, AlertCircle, CheckCircle, Eye } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -77,13 +77,7 @@ const mockData = {
   ],
 }
 
-// New interfaces for ChromaDB statistics
-interface ChromaStats {
-  name: string
-  count: number
-  success: boolean
-}
-
+// Updated interface for UploadedFile
 interface UploadedFile {
   filename: string
   fileType: string
@@ -98,14 +92,22 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [data, setData] = useState(mockData)
   
-  // New states for ChromaDB and file uploads
-  const [chromaStats, setChromaStats] = useState<ChromaStats | null>(null)
-  const [isLoadingChroma, setIsLoadingChroma] = useState(false)
+  // Existing file upload states
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [recentUploads, setRecentUploads] = useState<UploadedFile[]>([])
+
+  // New states for RAG
+  const [ragEnabled, setRagEnabled] = useState(true)
+  const [chunkSize, setChunkSize] = useState(1000)
+  const [chunkOverlap, setChunkOverlap] = useState(200)
+  const [indexStats, setIndexStats] = useState({
+    totalDocuments: 0,
+    totalChunks: 0,
+    lastUpdated: ''
+  })
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -122,44 +124,35 @@ export default function AdminDashboard() {
       setIsLoading(false)
     }, 500)
 
-    // Load ChromaDB stats
-    fetchChromaStats()
-
     return () => clearTimeout(timer)
   }, [isAuthenticated, router])
 
-  // Fetch ChromaDB statistics
-  const fetchChromaStats = async () => {
-    try {
-      setIsLoadingChroma(true)
-      
-      // Get token from localStorage
-      const token = localStorage.getItem("admin-token")
-      if (!token) {
-        throw new Error("No authentication token found")
-      }
-      
-      const response = await fetch("/api/chroma/stats", {
-        headers: {
-          Authorization: `Bearer ${token}`
+  // Fetch RAG stats when admin page loads
+  useEffect(() => {
+    const fetchRagStats = async () => {
+      try {
+        const token = localStorage.getItem("admin-token")
+        if (!token) return
+        
+        const response = await fetch("/api/faiss/stats", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          setIndexStats(data)
         }
-      })
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch stats: ${response.statusText}`)
+      } catch (error) {
+        console.error("Error fetching RAG stats:", error)
       }
-      
-      const stats = await response.json()
-      setChromaStats(stats)
-    } catch (error) {
-      console.error("Error fetching ChromaDB stats:", error)
-      setChromaStats(null)
-    } finally {
-      setIsLoadingChroma(false)
     }
-  }
+    
+    fetchRagStats()
+  }, [isAuthenticated])
 
-  // Handle file upload
+  // Enhanced file upload that includes RAG processing
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
     if (!files || files.length === 0) return
@@ -174,12 +167,20 @@ export default function AdminDashboard() {
       // Get token from localStorage
       const token = localStorage.getItem("admin-token")
       if (!token) {
-        throw new Error("No authentication token found")
+        setUploadError("No authentication token found - please login again");
+        setIsUploading(false);
+        return;
       }
       
       // Create form data
       const formData = new FormData()
       formData.append("file", files[0])
+      formData.append("documentType", "general") // Can be a selection in the UI
+      
+      // Add RAG processing options
+      formData.append("processForRag", ragEnabled.toString())
+      formData.append("chunkSize", chunkSize.toString())
+      formData.append("chunkOverlap", chunkOverlap.toString())
       
       // Simulated upload progress
       const progressInterval = setInterval(() => {
@@ -189,44 +190,86 @@ export default function AdminDashboard() {
         })
       }, 200)
       
-      // Upload file
-      const response = await fetch("/api/upload", {
+      // Upload file to the Python backend proxy
+      const response = await fetch("api/upload-proxy", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: formData
-      })
+        body: formData,
+      });
       
       clearInterval(progressInterval)
       
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || "Failed to upload file")
+        // Try to get error details, but handle non-JSON responses gracefully
+        let errorMessage = `Upload failed: ${response.statusText || response.status}`
+        
+        try {
+          if (response.headers.get("content-type")?.includes("application/json")) {
+            const errorData = await response.json()
+            errorMessage = errorData.error || errorMessage
+          } else {
+            const textError = await response.text()
+            if (textError) {
+              errorMessage = `${errorMessage}. Details: ${textError.substring(0, 100)}`
+            }
+          }
+        } catch (parseError) {
+          console.error("Error parsing error response:", parseError)
+        }
+        
+        throw new Error(errorMessage)
       }
       
-      setUploadProgress(100)
+      // Try to parse the successful response as JSON
+      let result;
+      try {
+        setUploadProgress(100)
+        result = await response.json()
+      } catch (jsonError) {
+        console.error("Error parsing response as JSON:", jsonError)
+        throw new Error("Received invalid response from server. Please try again.")
+      }
       
-      const result = await response.json()
-      setUploadSuccess(`File "${files[0].name}" uploaded successfully and added to database`)
+      // Show success with RAG info if applicable
+      let successMessage = `File "${files[0].name}" uploaded successfully`
+      if (result.rag && result.rag.indexed) {
+        successMessage += `. Processed into ${result.rag.chunks} chunks for search.`
+      }
+      
+      setUploadSuccess(successMessage)
       
       // Add to recent uploads
       const newUpload: UploadedFile = {
         filename: files[0].name,
-        fileType: result.metadata.fileType,
+        fileType: result.metadata?.fileType || files[0].type,
         fileSize: files[0].size,
         uploadedAt: new Date().toISOString(),
-        chunks: result.count
+        chunks: result.rag?.chunks || 0
       }
       
       setRecentUploads(prev => [newUpload, ...prev.slice(0, 4)])
       
-      // Refresh ChromaDB stats
-      fetchChromaStats()
-      
       // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = ""
+      }
+      
+      // Refresh RAG stats
+      try {
+        const statsResponse = await fetch("/api/faiss/stats", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json()
+          setIndexStats(statsData)
+        }
+      } catch (statsError) {
+        console.error("Error fetching stats:", statsError)
       }
     } catch (error) {
       console.error("Upload error:", error)
@@ -237,341 +280,336 @@ export default function AdminDashboard() {
     }
   }
 
+  // Helper function to format file size
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
   if (!isAuthenticated) {
     return null // Don't render anything if not authenticated
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto py-8">
-        <div className="mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo%20%281%29.PNG-yKZz6kaczfTNO25McyrsOvOoduHgXn.png"
-              alt="ISUZU Logo"
-              className="h-8"
-            />
-            <h1 className="text-2xl font-bold">ISUZU Kenya Chatbot Analytics</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => {
-              setIsLoading(true)
-              fetchChromaStats()
-              
-              // Simulate loading delay
-              setTimeout(() => {
-                setData(mockData)
-                setIsLoading(false)
-              }, 500)
-            }}>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh
-            </Button>
-            <Button variant="outline" size="sm">
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-            <Button variant="destructive" size="sm">
-              <Trash2 className="mr-2 h-4 w-4" />
-              Clear Data
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                logout()
-                router.push("/")
-              }}
-            >
-              Logout
-            </Button>
-          </div>
+    <div className="flex min-h-screen flex-col">
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight">Admin Dashboard</h2>
+          <Button onClick={logout} variant="outline">
+            Logout
+          </Button>
         </div>
 
-        <Tabs defaultValue="overview">
+        <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="topics">Topics</TabsTrigger>
-            <TabsTrigger value="sessions">Sessions</TabsTrigger>
-            <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
-
-          <TabsContent value="overview" className="space-y-8">
+          
+          <TabsContent value="overview">
             {isLoading ? (
               <div className="text-center py-10">Loading...</div>
             ) : (
-              <>
-                <div className="grid gap-4 md:grid-cols-3">
+              <div className="space-y-8">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   <AnalyticsCard
                     title="Total Sessions"
-                    value={data.totalSessions}
-                    description="Number of chat sessions"
+                    value={data.totalSessions.toString()}
+                    description="All-time sessions"
                   />
                   <AnalyticsCard
                     title="Total Messages"
-                    value={data.totalMessages}
-                    description="Number of messages exchanged"
+                    value={data.totalMessages.toString()}
+                    description="All-time messages"
                   />
                   <AnalyticsCard
                     title="Avg. Response Time"
                     value={data.avgResponseTime}
-                    description="Average time to respond"
+                    description="Time to generate response"
+                  />
+                  <AnalyticsCard
+                    title="Daily Active Users"
+                    value={data.activeUsers.daily.toString()}
+                    description={`${data.activeUsers.weekly} weekly, ${data.activeUsers.monthly} monthly`}
                   />
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-lg border bg-card p-6">
-                    <h3 className="mb-4 text-lg font-medium">Active Users</h3>
-                    <div className="h-[250px]">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  <Card className="col-span-2">
+                    <CardHeader>
+                      <CardTitle>Message History</CardTitle>
+                      <CardDescription>Total messages over time</CardDescription>
+                    </CardHeader>
+                    <CardContent>
                       <BarChart
                         data={[
-                          { name: "Daily", value: data.activeUsers.daily },
-                          { name: "Weekly", value: data.activeUsers.weekly },
-                          { name: "Monthly", value: data.activeUsers.monthly },
+                          { name: "Jan", value: 12 },
+                          { name: "Feb", value: 19 },
+                          { name: "Mar", value: 14 },
+                          { name: "Apr", value: 21 },
+                          { name: "May", value: 38 },
+                          { name: "Jun", value: 42 },
                         ]}
                       />
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
 
-                  <div className="rounded-lg border bg-card p-6">
-                    <h3 className="mb-4 text-lg font-medium">Top Topics</h3>
-                    <div className="h-[250px]">
-                      <PieChart data={data.topTopics} />
-                    </div>
-                  </div>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Top Topics</CardTitle>
+                      <CardDescription>Most discussed subjects</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <PieChart
+                        data={data.topTopics}
+                      />
+                    </CardContent>
+                  </Card>
                 </div>
-              </>
-            )}
-          </TabsContent>
 
-          <TabsContent value="topics">
-            {isLoading ? (
-              <div className="text-center py-10">Loading...</div>
-            ) : (
-              <div className="rounded-lg border bg-card">
-                <div className="p-4 border-b">
-                  <h3 className="text-lg font-medium">Most Discussed Topics</h3>
-                </div>
-                <div className="divide-y">
-                  <div className="grid grid-cols-3 p-4 font-medium">
-                    <div>Topic</div>
-                    <div>Count</div>
-                    <div>Percentage</div>
-                  </div>
-                  {data.topicsData.map((item, index) => (
-                    <div key={index} className="grid grid-cols-3 p-4">
-                      <div>{item.topic}</div>
-                      <div>{item.count}</div>
-                      <div>{item.percentage}</div>
-                    </div>
-                  ))}
-                </div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent Messages</CardTitle>
+                    <CardDescription>Last few interactions</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <MessagesTable messages={data.messages} />
+                  </CardContent>
+                </Card>
               </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="sessions">
-            {isLoading ? (
-              <div className="text-center py-10">Loading...</div>
-            ) : (
-              <div className="rounded-lg border bg-card">
-                <div className="p-4 border-b">
-                  <h3 className="text-lg font-medium">Chat Sessions</h3>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="p-4 text-left">ID</th>
-                        <th className="p-4 text-left">User</th>
-                        <th className="p-4 text-left">Start Time</th>
-                        <th className="p-4 text-left">Duration</th>
-                        <th className="p-4 text-left">Messages</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.sessions.map((session) => (
-                        <tr key={session.id} className="border-b hover:bg-gray-50">
-                          <td className="p-4">{session.id}</td>
-                          <td className="p-4">{session.user}</td>
-                          <td className="p-4">{session.startTime}</td>
-                          <td className="p-4">{session.duration}</td>
-                          <td className="p-4">{session.messages}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="messages">
-            {isLoading ? (
-              <div className="text-center py-10">Loading...</div>
-            ) : (
-              <MessagesTable messages={data.messages} />
             )}
           </TabsContent>
           
-          {/* New Documents tab */}
-          <TabsContent value="documents" className="space-y-8">
-            <div className="grid gap-8 md:grid-cols-3">
-              <div className="md:col-span-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Upload Documents</CardTitle>
-                    <CardDescription>
-                      Upload files to be indexed in the vector database. Supported formats: TXT, CSV, JSON, Markdown.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="mb-4">
-                      <Input 
-                        ref={fileInputRef}
-                        type="file" 
-                        onChange={handleFileUpload}
-                        disabled={isUploading}
-                        accept=".txt,.csv,.json,.md"
-                      />
+          <TabsContent value="documents">
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Document Search Index</CardTitle>
+                  <CardDescription>
+                    Upload and index documents for semantic search
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <h3 className="text-md font-medium mb-2">Upload Documents</h3>
+                      
+                      <div className="flex flex-col space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id="rag-enabled"
+                            checked={ragEnabled}
+                            onChange={(e) => setRagEnabled(e.target.checked)}
+                            className="h-4 w-4"
+                          />
+                          <label htmlFor="rag-enabled">
+                            Process for semantic search
+                          </label>
+                        </div>
+                        
+                        {ragEnabled && (
+                          <div className="space-y-2 pl-6 border-l-2 border-gray-200 mt-2">
+                            <div>
+                              <label className="block text-sm mb-1">
+                                Chunk Size (characters)
+                              </label>
+                              <input
+                                type="number"
+                                value={chunkSize}
+                                onChange={(e) => setChunkSize(parseInt(e.target.value) || 1000)}
+                                className="w-full p-2 border rounded"
+                                min="100"
+                                max="10000"
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="block text-sm mb-1">
+                                Chunk Overlap (characters)
+                              </label>
+                              <input
+                                type="number"
+                                value={chunkOverlap}
+                                onChange={(e) => setChunkOverlap(parseInt(e.target.value) || 200)}
+                                className="w-full p-2 border rounded"
+                                min="0"
+                                max={chunkSize / 2}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="mt-4">
+                          <div className="relative">
+                            <input
+                              type="file"
+                              ref={fileInputRef}
+                              onChange={handleFileUpload}
+                              className="w-full p-2 border rounded"
+                              accept=".pdf,.csv,.xlsx,.xls,.json,.txt"
+                            />
+                            
+                            {isUploading && (
+                              <div className="mt-2">
+                                <Progress value={uploadProgress} className="h-2" />
+                                <p className="text-xs text-center mt-1">Uploading... {uploadProgress}%</p>
+                              </div>
+                            )}
+                            
+                            {uploadSuccess && (
+                              <div className="flex items-center mt-2 text-green-600 text-sm">
+                                <CheckCircle className="h-4 w-4 mr-1" />
+                                {uploadSuccess}
+                              </div>
+                            )}
+                            
+                            {uploadError && (
+                              <div className="flex items-center mt-2 text-red-600 text-sm">
+                                <AlertCircle className="h-4 w-4 mr-1" />
+                                {uploadError}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     
-                    {isUploading && (
-                      <div className="mb-4">
-                        <p className="text-sm mb-2">Uploading and processing file...</p>
-                        <Progress value={uploadProgress} />
+                    <div>
+                      <h3 className="text-md font-medium mb-2">Search Index Stats</h3>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm">Total Documents:</span>
+                          <span className="font-medium">{indexStats.totalDocuments}</span>
+                        </div>
+                        
+                        <div className="flex justify-between">
+                          <span className="text-sm">Total Chunks:</span>
+                          <span className="font-medium">{indexStats.totalChunks}</span>
+                        </div>
+                        
+                        <div className="flex justify-between">
+                          <span className="text-sm">Last Updated:</span>
+                          <span className="font-medium">
+                            {indexStats.lastUpdated 
+                              ? new Date(indexStats.lastUpdated).toLocaleString() 
+                              : 'Never'}
+                          </span>
+                        </div>
+                        
+                        <div className="mt-4">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="w-full"
+                            onClick={async () => {
+                              try {
+                                const token = localStorage.getItem("admin-token")
+                                const response = await fetch("/api/faiss/reindex", {
+                                  method: "POST",
+                                  headers: {
+                                    Authorization: `Bearer ${token}`
+                                  }
+                                })
+                                
+                                if (response.ok) {
+                                  const result = await response.json()
+                                  setUploadSuccess(`Reindexed ${result.indexed} documents successfully`)
+                                  
+                                  // Refresh stats
+                                  const statsResponse = await fetch("/api/faiss/stats", {
+                                    headers: {
+                                      Authorization: `Bearer ${token}`
+                                    }
+                                  })
+                                  
+                                  if (statsResponse.ok) {
+                                    const statsData = await statsResponse.json()
+                                    setIndexStats(statsData)
+                                  }
+                                } else {
+                                  const errorData = await response.json()
+                                  setUploadError(errorData.error || "Failed to reindex documents")
+                                }
+                              } catch (error) {
+                                setUploadError("Failed to reindex documents")
+                                console.error(error)
+                              }
+                            }}
+                          >
+                            Reindex All Documents
+                          </Button>
+                        </div>
                       </div>
-                    )}
-                    
-                    {uploadSuccess && (
-                      <div className="flex items-center gap-2 p-2 bg-green-50 text-green-700 rounded mb-4">
-                        <CheckCircle className="h-4 w-4" />
-                        <p className="text-sm">{uploadSuccess}</p>
-                      </div>
-                    )}
-                    
-                    {uploadError && (
-                      <div className="flex items-center gap-2 p-2 bg-red-50 text-red-700 rounded mb-4">
-                        <AlertCircle className="h-4 w-4" />
-                        <p className="text-sm">Error: {uploadError}</p>
-                      </div>
-                    )}
-                  </CardContent>
-                  <CardFooter>
-                    <p className="text-xs text-gray-500">
-                      Documents will be chunked and embedded in the vector database to provide better answers to user queries.
-                    </p>
-                  </CardFooter>
-                </Card>
-                
-                {recentUploads.length > 0 && (
-                  <Card className="mt-4">
-                    <CardHeader>
-                      <CardTitle>Recent Uploads</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="overflow-x-auto">
-                        <table className="w-full">
-                          <thead>
-                            <tr className="border-b">
-                              <th className="p-2 text-left text-xs font-medium">Filename</th>
-                              <th className="p-2 text-left text-xs font-medium">Type</th>
-                              <th className="p-2 text-left text-xs font-medium">Size</th>
-                              <th className="p-2 text-left text-xs font-medium">Chunks</th>
-                              <th className="p-2 text-left text-xs font-medium">Uploaded</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {recentUploads.map((file, index) => (
-                              <tr key={index} className="border-b hover:bg-gray-50">
-                                <td className="p-2 text-xs">{file.filename}</td>
-                                <td className="p-2 text-xs">{file.fileType}</td>
-                                <td className="p-2 text-xs">{Math.round(file.fileSize / 1024)} KB</td>
-                                <td className="p-2 text-xs">{file.chunks || '-'}</td>
-                                <td className="p-2 text-xs">
-                                  {new Date(file.uploadedAt).toLocaleString()}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
               
-              <div>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Vector Database</CardTitle>
-                    <CardDescription>
-                      ChromaDB statistics and information
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {isLoadingChroma ? (
-                      <div className="text-center py-8">
-                        <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-gray-400" />
-                        <p className="text-sm text-gray-500">Loading database statistics...</p>
-                      </div>
-                    ) : chromaStats ? (
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <Database className="h-8 w-8 text-primary" />
-                          <div>
-                            <h3 className="font-medium">{chromaStats.name}</h3>
-                            <p className="text-sm text-gray-500">Collection Name</p>
-                          </div>
-                        </div>
-                        
-                        <Separator />
-                        
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="text-sm font-medium">Document Chunks</h4>
-                            <span className="text-2xl font-bold">{chromaStats.count}</span>
-                          </div>
-                          <Progress value={(chromaStats.count / 1000) * 100} max={100} />
-                          <p className="text-xs text-gray-500 mt-1">
-                            {chromaStats.count} chunks of text are indexed in the database
-                          </p>
-                        </div>
-                        
-                        <Separator />
-                        
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="w-full"
-                          onClick={fetchChromaStats}
-                        >
-                          <RefreshCw className="mr-2 h-4 w-4" />
-                          Refresh Stats
-                        </Button>
-                      </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Uploads</CardTitle>
+                </CardHeader>
+                
+                <CardContent>
+                  <div className="space-y-2">
+                    {recentUploads.length === 0 ? (
+                      <p className="text-sm text-gray-500">No recent uploads</p>
                     ) : (
-                      <div className="text-center py-8">
-                        <AlertCircle className="h-8 w-8 mx-auto mb-4 text-gray-400" />
-                        <p className="text-sm text-gray-500">
-                          Could not load database statistics.
-                        </p>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="mt-4"
-                          onClick={fetchChromaStats}
-                        >
-                          <RefreshCw className="mr-2 h-4 w-4" />
-                          Try Again
-                        </Button>
-                      </div>
+                      recentUploads.map((file, i) => (
+                        <div key={i} className="flex justify-between py-2 border-b last:border-0">
+                          <div>
+                            <p className="font-medium">{file.filename}</p>
+                            <p className="text-xs text-gray-500">
+                              {new Date(file.uploadedAt).toLocaleString()} · {formatFileSize(file.fileSize)}
+                              {file.chunks ? ` · ${file.chunks} chunks` : ''}
+                            </p>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => {
+                                // View document details
+                              }}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              onClick={() => {
+                                // Delete the document
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))
                     )}
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
+          </TabsContent>
+          
+          <TabsContent value="settings">
+            <Card>
+              <CardHeader>
+                <CardTitle>Settings</CardTitle>
+                <CardDescription>
+                  Configure the IntelliChat system
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>Settings options will be added here in a future update.</p>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

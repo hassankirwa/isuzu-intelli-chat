@@ -1,4 +1,4 @@
-export const runtime = 'nodejs'
+export const runtime = 'nodejs';
 
 import { NextRequest, NextResponse } from "next/server";
 
@@ -44,23 +44,32 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    // Clone the request data - this is necessary because we can only consume the body once
-    const formData = await req.formData();
+    // Parse request body
+    const requestData = await req.json();
     
-    // Extract file info for metadata
-    const file = formData.get("file") as File | null;
-    const fileType = file?.type || 'application/octet-stream';
-    const fileName = file?.name || 'unknown';
+    // Validate query
+    if (!requestData.query) {
+      return NextResponse.json(
+        { error: "Missing required parameter: query" },
+        { status: 400, headers: corsHeaders }
+      );
+    }
     
-    // Forward the file and settings to the Python backend
+    // Forward the query to the Python backend
     try {
-      const backendResponse = await fetch(`${BACKEND_URL}/upload`, {
+      const backendResponse = await fetch(`${BACKEND_URL}/query`, {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: requestData.query,
+          top_k: requestData.top_k || 3,
+        }),
       });
       
       if (!backendResponse.ok) {
-        let errorMessage = `Upload failed: ${backendResponse.status} ${backendResponse.statusText}`;
+        let errorMessage = `Query failed: ${backendResponse.status} ${backendResponse.statusText}`;
         try {
           if (backendResponse.headers.get('content-type')?.includes('application/json')) {
             const errorData = await backendResponse.json();
@@ -84,23 +93,20 @@ export async function POST(req: NextRequest) {
       }
       
       // Get response data from backend
-      const responseData = await backendResponse.json();
+      const backendData = await backendResponse.json();
       
-      // Format the response to match frontend expectations
-      const response = {
-        ...responseData,
-        rag: {
-          indexed: true,
-          chunks: responseData.chunks_created || 0
-        },
-        metadata: {
-          fileType,
-          fileName,
-          timestamp: new Date().toISOString()
-        }
-      };
+      // Transform results to match frontend expectations
+      const transformedResults = backendData.results.map((result: any) => ({
+        content: result.content,
+        metadata: result.metadata,
+        score: result.score,
+      }));
       
-      return NextResponse.json(response, { 
+      return NextResponse.json({
+        results: transformedResults,
+        query: backendData.query,
+        processingTime: backendData.processing_time,
+      }, { 
         status: 200, 
         headers: corsHeaders 
       });
@@ -139,4 +145,4 @@ export async function OPTIONS(req: NextRequest) {
   }
   
   return new NextResponse(null, { status: 204 });
-}
+} 

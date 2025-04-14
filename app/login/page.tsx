@@ -2,75 +2,73 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/contexts/auth-context"
+import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { AlertCircle } from "lucide-react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function LoginPage() {
-  const { login } = useAuth()
   const router = useRouter()
-  
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  
+  const [error, setError] = useState("")
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!username || !password) {
-      setError("Please enter both username and password")
-      return
-    }
-    
     setIsLoading(true)
-    setError(null)
-    
+    setError("")
+
     try {
-      const success = await login(username, password)
-      
-      if (success) {
-        router.push("/admin")
-      } else {
+      // First, try to authenticate with NextAuth
+      const result = await signIn("credentials", {
+        username,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
         setError("Invalid username or password")
+        setIsLoading(false)
+        return
       }
+
+      // Also set a cookie for middleware to check
+      document.cookie = `admin-token=true; path=/; max-age=${60 * 60 * 24 * 7}` // 1 week
+      
+      // Set local storage token needed by API calls
+      if (username === "admin" && password === "admin123") {
+        localStorage.setItem("admin-token", "admin-token-test-123");
+      }
+
+      router.push("/admin")
     } catch (error) {
-      setError("An error occurred. Please try again.")
       console.error("Login error:", error)
-    } finally {
+      setError("An error occurred during login")
       setIsLoading(false)
     }
   }
-  
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
-      <Card className="mx-auto max-w-md w-full">
-        <CardHeader className="space-y-1">
-          <div className="flex justify-center mb-4">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo%20%281%29.PNG-yKZz6kaczfTNO25McyrsOvOoduHgXn.png"
-              alt="ISUZU Logo"
-              className="h-12"
-            />
-          </div>
-          <CardTitle className="text-2xl font-bold text-center">Admin Login</CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access the admin dashboard
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Admin Login</CardTitle>
+          <CardDescription>
+            Sign in to access the admin dashboard
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
-                placeholder="Enter your username"
+                type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                disabled={isLoading}
+                required
               />
             </div>
             <div className="space-y-2">
@@ -78,30 +76,25 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
+                required
               />
             </div>
-            
             {error && (
-              <div className="flex items-center gap-2 p-2 bg-red-50 text-red-700 rounded">
-                <AlertCircle className="h-4 w-4" />
-                <p className="text-sm">{error}</p>
-              </div>
+              <div className="text-sm font-medium text-red-500">{error}</div>
             )}
-            
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Logging in..." : "Login"}
+          </CardContent>
+          <CardFooter>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="justify-center">
-          <p className="text-xs text-gray-500">
-            This is a secure area. Only authorized administrators can access this page.
-          </p>
-        </CardFooter>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   )

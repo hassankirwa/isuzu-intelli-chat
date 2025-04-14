@@ -1,0 +1,74 @@
+{
+  "data": {
+    "title": "Isuzu mu-X Brochure",
+    "vehicle_type": "SUV",
+    "model_name": "mu-X",
+    "summary": "The Isuzu mu-X is a 7-seat SUV that delivers unmatched performance, reliability, and off-road ability. With sleek urban style and cutting-edge technology, it offers a perfect balance of form and function.",
+    "key_features": [
+      "3-litre turbo-diesel engine",
+      "7-seat capacity",
+      "Ultra-bright Bi-LED headlights with LED Daytime Running Lights (DRLs)",
+      "Dual zone climate control",
+      "Full dark leather seats",
+      "Smart MID display",
+      "Reversing camera with dynamic guidelines",
+      "Android Auto™ and wireless Apple CarPlay®",
+      "Hands-free power tailgate",
+      "Trailer Sway Control (TSC)",
+      "Steel timing chain",
+      "Front and rear coil spring suspension"
+    ],
+    "specifications": {
+      "Engine": "3-litre turbo-diesel",
+      "Power": "190HP",
+      "Torque": "450Nm",
+      "Transmission": "6-speed automatic",
+      "Towing Capacity": "Up to 3.5 tonnes"
+    },
+    "performance": {
+      "Engine": "3-litre turbo-diesel",
+      "Power": "190HP",
+      "Torque": "450Nm",
+      "Transmission": "6-speed automatic"
+    },
+    "design": {
+      "Exterior": "Broad, bold grille",
+      "Headlights": "Bi-LED headlights with LED DRLs",
+      "Wheels": "18” alloy wheels",
+      "Interior": "Comfortable and spacious cabin",
+      "Seats": "Full dark leather seats"
+    },
+    "safety": {
+      "ANCAP Rating": "5-star",
+      "Airbags": "Seven airbags",
+      "Chassis": "Stronger, more robust chassis",
+      "Safety Features": "Reversing camera, Rear Parking Sensors, Rear Cross Traffic Alert"
+    },
+    "comfort": {
+      "Seating Capacity": "7 seats",
+      "Climate Control": "Dual zone climate control",
+      "Seats": "Full dark leather seats",
+      "Steering Wheel": "Tilt & telescopic steering wheel",
+      "Convenience": "Electric Park Brake, Auto Hold function"
+    },
+    "dimensions": {
+      "Length": null,
+      "Width": null,
+      "Height": null,
+      "Wheelbase": null,
+      "Ground Clearance": null
+    },
+    "contact_information": null,
+    "source_brochure": "Isuzu mu-X Brochure",
+    "section": "SUVs",
+    "url": "https://d2ekrm2045sfs2.cloudfront.net/cms/2024/09/15071022/ISUZU-MuX_BROCHURE.pdf"
+  },
+  "metadata": {
+    "filename": "Isuzu_mu-X_Brochure.json",
+    "fileType": "json",
+    "fileSize": 2239,
+    "uploadedAt": "2025-04-10T07:50:38.267Z",
+    "documentType": "general",
+    "storedAt": "2025-04-10T07:50:38.268Z"
+  }
+}

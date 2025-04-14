@@ -1,0 +1,486 @@
+{
+  "data": [
+    {
+      "Model": "MODEL",
+      "Body Description": "BODY DESCRIPTION",
+      "UoM": "UoM",
+      "Price (KES - VAT Inclusive)": " BODY PRICE (KES - VAT INCLUSIVE) "
+    },
+    {
+      "Model": "NLR77E",
+      "Body Description": "NLR FULLY ENCLOSED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 311000
+    },
+    {
+      "Model": "NLR77E",
+      "Body Description": "NLR FIXED HIGH SIDED STEEL BODY (CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 283000
+    },
+    {
+      "Model": "NLR77E",
+      "Body Description": "NLR77E MILK TANKER 2,500L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 952000
+    },
+    {
+      "Model": "NMR85H",
+      "Body Description": "NMR FULLY ENCLOSED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 378000
+    },
+    {
+      "Model": "NMR85H",
+      "Body Description": "NMR FIXED HIGH SIDED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 355000
+    },
+    {
+      "Model": "NMR85H",
+      "Body Description": "NMR DOUBLE DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 378000
+    },
+    {
+      "Model": "NMR85H",
+      "Body Description": "NMR LOW DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 283000
+    },
+    {
+      "Model": "NMR85H",
+      "Body Description": "NMR85H MILK TANKER 3,500L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1056000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR-K FULLY ENCLOSED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 449000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR-K  FIXED HIGH SIDED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 407000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR-K DOUBLE DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 406000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR-K LOW DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 306000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR-K TIPPER",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1485000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR81K WATER TANKER 5,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1152000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR81K WATER TANKER 5,000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1589000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR81K MILK TANKER 5,0000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1591000
+    },
+    {
+      "Model": "NQR81K",
+      "Body Description": "NQR81K FUEL TANKER 5,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1413000
+    },
+    {
+      "Model": "NPS81UH",
+      "Body Description": "NPS CARGO CARRIER- KDF",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 946000
+    },
+    {
+      "Model": "NQR81M",
+      "Body Description": "NQR81M FULLY ENCLOSED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 538000
+    },
+    {
+      "Model": "NQR81M",
+      "Body Description": "NQR81M FIXED HIGH SIDED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 516000
+    },
+    {
+      "Model": "NQR81M",
+      "Body Description": "NQR81M DOUBLE DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 526000
+    },
+    {
+      "Model": "NQR81M",
+      "Body Description": "NQR81M LOW DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 425000
+    },
+    {
+      "Model": "NQR81M",
+      "Body Description": "NQR81M FUEL TANKER 6,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1558000
+    },
+    {
+      "Model": "NQR81M",
+      "Body Description": "NQR81M MILK TANKER 6,000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1761000
+    },
+    {
+      "Model": "NQR81M",
+      "Body Description": "NQR81M WATER TANKER 6,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1209000
+    },
+    {
+      "Model": "NQR81M",
+      "Body Description": "NQR81M WATER TANKER 6,000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1636000
+    },
+    {
+      "Model": "FRR90N",
+      "Body Description": "FRR90N FULLY ENCLOSED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": null,
+      "Price (KES - VAT Inclusive)": 550000
+    },
+    {
+      "Model": "FRR90N",
+      "Body Description": "FRR90N  FIXED HIGH SIDED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 527000
+    },
+    {
+      "Model": "FRR90N",
+      "Body Description": "FRR90N DOUBLE DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 537000
+    },
+    {
+      "Model": "FRR90N",
+      "Body Description": "FRR90N  LOW DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 422000
+    },
+    {
+      "Model": "FRR90N",
+      "Body Description": "FRR90N FUEL TANKER 8,500L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2042000
+    },
+    {
+      "Model": "FRR90N",
+      "Body Description": "FRR90N MILK TANKER 8,500L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2398000
+    },
+    {
+      "Model": "FRR90N",
+      "Body Description": "FRR90N WATER TANKER 8,500L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1589000
+    },
+    {
+      "Model": "FRR90N",
+      "Body Description": "FRR90N WATER TANKER 8,500L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2299000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90L FULLY ENCLOSED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 521000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90L FIXED HIGH SIDED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 515000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90L DOUBLE DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 527000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90L LOW DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 433000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90L DOUBLE DROPSIDE STEEL BODY(SAND HARVESTER)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 580000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90L LOW DROPSIDE STEEL BODY(SAND HARVESTER)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 487000
+    },
+    {
+      "Model": "FVR90L ",
+      "Body Description": "FVR90L TIPPER ",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1716000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90 FUEL TANKER 11,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2181000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90 MILK TANKER 11,000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2686000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90 WATER TANKER 11,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1843000
+    },
+    {
+      "Model": "FVR90L",
+      "Body Description": "FVR90 WATER TANKER 11,0000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2459000
+    },
+    {
+      "Model": "MODEL",
+      "Body Description": "BODY DESCRIPTION",
+      "UoM": "UoM",
+      "Price (KES - VAT Inclusive)": " PRICE (KES - VAT INCLUSIVE) "
+    },
+    {
+      "Model": "FTS34L",
+      "Body Description": "FTS TROOP CARRIER -KDF",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2111000
+    },
+    {
+      "Model": "FTS34L",
+      "Body Description": "FTS TROOP CARRIER-KNPS",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 909000
+    },
+    {
+      "Model": "FTS34L",
+      "Body Description": "FTS34L WATER TANKER 7,500L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1428000
+    },
+    {
+      "Model": "FTS34L",
+      "Body Description": "FTS34L WATER TANKER 7,500L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2315000
+    },
+    {
+      "Model": "FTS34L",
+      "Body Description": "FTS34L FUEL TANKER 7,500L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1709000
+    },
+    {
+      "Model": "FTS34L",
+      "Body Description": "FTS34L MILK TANKER 7,500L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2090000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR FULLY ENCLOSED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 602000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR FIXED HIGH SIDED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 579000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR DOUBLE DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 584000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR LOW DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 487000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR DOUBLE DROPSIDE STEEL BODY(SAND HARVESTER)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 674000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR LOW DROPSIDE STEEL BODY(SAND HARVESTER)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 542000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR TIPPER",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1869000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR34P MILK TANKER 12,000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 3053000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR34P WATER TANKER 12,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1825000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR34P WATER TANKER 12,000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2533000
+    },
+    {
+      "Model": "FVR34P",
+      "Body Description": "FVR34P FUEL TANKER 12,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2315000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ FULLY ENCLOSED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 714000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ FIXED HIGH SIDED STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 676000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ DOUBLE DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 705000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ LOW DROPSIDE STEEL BODY(CORRUG/PLAIN)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 553000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ DOUBLE DROPSIDE STEEL BODY(SAND HARVESTER)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 749000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ LOW DROPSIDE STEEL BODY(SAND HARVESTER)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 575000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ TIPPER (15CM/12CM) - WITH FRONT TIPPING KIT (Provided by IEA)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1353000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ TIPPER (15CM/12CM) - WITH UNDERBODY TIPPING KIT (Provided by IEA)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1353000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ34T FUEL TANKER 16,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 2346000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ34T MILK TANKER 16,000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 3118000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ34T WATER TANKER 16,000L (Mild Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 1980000
+    },
+    {
+      "Model": "FVZ34T",
+      "Body Description": "FVZ34T WATER TANKER 16,000L (Stainless Steel)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 3118000
+    },
+    {
+      "Model": "TF-SC",
+      "Body Description": "TF NATION BODY",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 139000
+    },
+    {
+      "Model": "TF-SC",
+      "Body Description": "TF  STEEL BODY (CORRUG/PLAIN/WIREMESH)",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 139000
+    },
+    {
+      "Model": "TF-SC",
+      "Body Description": "TF MATATU BODY",
+      "UoM": "UNIT",
+      "Price (KES - VAT Inclusive)": 222000
+    }
+  ],
+  "metadata": {
+    "filename": "body_price.json",
+    "fileType": "json",
+    "fileSize": 12560,
+    "uploadedAt": "2025-04-07T11:05:13.262Z",
+    "documentType": "general",
+    "storedAt": "2025-04-07T11:05:13.265Z"
+  }
+}

@@ -20,7 +20,44 @@ const nextConfig = {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
   },
+  webpack: (config, { isServer }) => {
+    // Handle binary files and problematic modules
+    if (!isServer) {
+      // Client-side bundle fallbacks
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        child_process: false,
+        perf_hooks: false,
+        stream: false,
+        "pdfjs-dist": false,
+      };
+    }
+
+    // Prevent webpack from processing binary files directly
+    config.module.rules.push({
+      test: /\.(node|bin|wasm)$/,
+      use: 'file-loader',
+      type: 'javascript/auto',
+    });
+
+    return config;
+  },
+  // Disable telemetry to avoid file access issues
+  telemetry: {
+    disableConsoleLog: true
+  },
+  // Disable instrumentation to avoid .next/trace file issues
+  tracing: {
+    ignoreRootSpan: true,
+    disableInstrumentation: true
+  }
 }
 
 mergeConfig(nextConfig, userConfig)

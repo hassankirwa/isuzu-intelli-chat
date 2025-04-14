@@ -1,10 +1,10 @@
 "use client"
 
-import type { Message } from "ai"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { motion } from "framer-motion"
 import ReactMarkdown from "react-markdown"
+import { type Message } from "@/utils/useCustomChat"
 
 export function ChatMessage({ message }: { message: Message }) {
   const isUser = message.role === "user"

@@ -6,7 +6,6 @@ import { useState, useRef, useEffect } from "react"
 import { Menu, X, Plus, MessageSquare, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { useChat } from "ai/react"
 import { ChatMessage } from "@/components/chat-message"
 import { ChatInput } from "@/components/chat-input"
 import { WelcomeScreen } from "@/components/welcome-screen"
@@ -15,6 +14,7 @@ import { loadChatHistory, saveNewSession, updateSession, deleteSession, type Cha
 import { v4 as uuidv4 } from "uuid"
 import Image from "next/image"
 import { LoginDialog } from "@/components/login-dialog"
+import { useCustomChat, type Message } from "@/utils/useCustomChat"
 
 // Helper function to create a title from the first message
 const createChatTitle = (message: string): string => {
@@ -39,7 +39,8 @@ export default function IsuzuChat() {
     isLoading,
     setInput,
     setMessages,
-  } = useChat({
+    error: chatError
+  } = useCustomChat({
     api: "/api/chat",
     onFinish: (message) => {
       if (currentSessionId) {
@@ -48,6 +49,14 @@ export default function IsuzuChat() {
       }
     },
   })
+
+  // Display error if any
+  useEffect(() => {
+    if (chatError) {
+      console.error("Chat error:", chatError);
+      // You could display an error message to the user here
+    }
+  }, [chatError]);
 
   // Custom submit handler
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -234,6 +243,16 @@ export default function IsuzuChat() {
                   <ChatMessage key={message.id} message={message} />
                 ))}
               </AnimatePresence>
+            )}
+            {chatError && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700"
+              >
+                <p className="font-medium">Error: {chatError.message}</p>
+                <p className="text-sm mt-1">Please try again or refresh the page.</p>
+              </motion.div>
             )}
             <div ref={messagesEndRef} />
           </div>

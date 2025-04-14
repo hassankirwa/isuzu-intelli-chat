@@ -14,3 +14,325 @@
 [32mINFO[0m:     [22-03-2025 20:53:02] Waiting for application startup.
 [32mINFO[0m:     [22-03-2025 20:53:02] Application startup complete.
 [32mINFO[0m:     [22-03-2025 20:53:02] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [22-03-2025 21:04:50] ::1:63641 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:04:51] ::1:63644 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:04:51] ::1:63641 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:04:51] ::1:63644 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:06:17] ::1:63688 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:06:17] ::1:63689 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:06:17] ::1:63688 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:06:17] ::1:63689 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 409
+[31mERROR[0m:    [22-03-2025 21:06:18] Exception in ASGI application
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\site-packages\anyio\streams\memory.py", line 111, in receive
+    return self.receive_nowait()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\anyio\streams\memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\site-packages\anyio\streams\memory.py", line 124, in receive
+    return receiver.item
+           ^^^^^^^^^^^^^
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 147, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Program Files\Python312\Lib\site-packages\opentelemetry\instrumentation\asgi\__init__.py", line 743, in __call__
+    await self.app(scope, otel_receive, otel_send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 181, in __call__
+    raise app_exc
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 181, in __call__
+    raise app_exc
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 120, in catch_exceptions_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 173, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Program Files\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 175, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 144, in check_http_version_middleware
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 153, in call_next
+    raise app_exc
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\base.py", line 140, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\routing.py", line 714, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\routing.py", line 734, in app
+    await route.handle(scope, receive, send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Program Files\Python312\Lib\site-packages\starlette\routing.py", line 73, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\fastapi\routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\fastapi\routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py", line 134, in async_wrapper
+    return await f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 798, in create_collection
+    await to_thread.run_sync(
+  File "C:\Program Files\Python312\Lib\site-packages\anyio\to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\anyio\_backends\_asyncio.py", line 2441, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\anyio\_backends\_asyncio.py", line 943, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\server\fastapi\__init__.py", line 787, in process_create_collection
+    return self._api.create_collection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\api\segment.py", line 103, in wrapper
+    return self._rate_limit_enforcer.rate_limit(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\rate_limit\simple_rate_limit\__init__.py", line 24, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\api\segment.py", line 242, in create_collection
+    coll, created = self._sysdb.create_collection(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\telemetry\opentelemetry\__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chromadb\db\mixins\sysdb.py", line 305, in create_collection
+    raise UniqueConstraintError(f"Collection {name} already exists")
+chromadb.errors.UniqueConstraintError: Collection isuzu_knowledge already exists
+[32mINFO[0m:     [22-03-2025 21:08:07] ::1:63805 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:08:07] ::1:63806 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:08:07] ::1:63805 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:08:23] ::1:63812 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:08:39] ::1:63817 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:12] ::1:63880 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:12] ::1:63881 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:12] ::1:63880 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:37] ::1:63888 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:37] ::1:63889 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:37] ::1:63888 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:37] ::1:63889 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:37] ::1:63888 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:11:37] ::1:63889 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:12:16] ::1:63905 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:12:16] ::1:63906 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:12:16] ::1:63905 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:20] ::1:64401 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:20] ::1:64402 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:20] ::1:64401 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:20] ::1:64402 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:28] ::1:64403 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:28] ::1:64404 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:28] ::1:64403 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:28] ::1:64404 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:28] ::1:64403 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:28] ::1:64404 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:37] ::1:64409 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:37] ::1:64410 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:20:37] ::1:64409 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:50] ::1:64736 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:50] ::1:64737 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:50] ::1:64736 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:50] ::1:64737 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:57] ::1:64738 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:57] ::1:64739 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:57] ::1:64738 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:57] ::1:64739 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:57] ::1:64738 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:29:57] ::1:64739 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:30:07] ::1:64745 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:30:07] ::1:64746 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:30:07] ::1:64745 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:05] ::1:65103 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:05] ::1:65104 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:05] ::1:65103 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:05] ::1:65104 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:11] ::1:65106 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:11] ::1:65107 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:11] ::1:65106 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:11] ::1:65107 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:11] ::1:65106 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:11] ::1:65107 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:21] ::1:65111 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:21] ::1:65112 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:38:21] ::1:65111 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:44:17] ::1:65369 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:44:24] ::1:65374 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:44:43] Shutting down
+[32mINFO[0m:     [22-03-2025 21:44:44] Waiting for application shutdown.
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component System
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component SegmentAPI
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component LocalExecutor
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component Posthog
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component SqliteDB
+[36mDEBUG[0m:    [22-03-2025 21:44:44] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [22-03-2025 21:44:44] Application shutdown complete.
+[32mINFO[0m:     [22-03-2025 21:44:44] Finished server process [[36m25148[0m]
+[33mWARNING[0m:  [22-03-2025 21:44:52] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [22-03-2025 21:44:52] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component System
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component SqliteDB
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component Posthog
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component LocalExecutor
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component SegmentAPI
+[36mDEBUG[0m:    [22-03-2025 21:44:52] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [22-03-2025 21:44:52] Started server process [[36m27016[0m]
+[32mINFO[0m:     [22-03-2025 21:44:52] Waiting for application startup.
+[32mINFO[0m:     [22-03-2025 21:44:52] Application startup complete.
+[32mINFO[0m:     [22-03-2025 21:44:52] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [22-03-2025 21:48:49] ::1:65520 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:48:56] ::1:65521 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:48:56] ::1:65521 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:53:05] ::1:49393 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:53:06] ::1:49393 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 21:53:28] ::1:49397 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:06] ::1:50159 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:06] ::1:50160 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:06] ::1:50163 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:15] ::1:50169 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:15] ::1:50170 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:15] ::1:50169 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:28] ::1:50174 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:28] ::1:50175 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:00:29] ::1:50174 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:01:23] ::1:50186 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:01:23] ::1:50187 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:01:23] ::1:50186 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:11:20] ::1:50776 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:12:45] Shutting down
+[32mINFO[0m:     [22-03-2025 22:12:45] Waiting for application shutdown.
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component System
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component SegmentAPI
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component LocalExecutor
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component Posthog
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component SqliteDB
+[36mDEBUG[0m:    [22-03-2025 22:12:45] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [22-03-2025 22:12:45] Application shutdown complete.
+[32mINFO[0m:     [22-03-2025 22:12:45] Finished server process [[36m27016[0m]
+[33mWARNING[0m:  [22-03-2025 22:12:53] chroma_server_nofile is not supported on Windows. chroma_server_nofile will not be set.
+[32mINFO[0m:     [22-03-2025 22:12:53] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component System
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component SqliteDB
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component Posthog
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component LocalExecutor
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component SegmentAPI
+[36mDEBUG[0m:    [22-03-2025 22:12:53] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [22-03-2025 22:12:53] Started server process [[36m18472[0m]
+[32mINFO[0m:     [22-03-2025 22:12:53] Waiting for application startup.
+[32mINFO[0m:     [22-03-2025 22:12:53] Application startup complete.
+[32mINFO[0m:     [22-03-2025 22:12:53] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [22-03-2025 22:13:17] ::1:50840 - "GET / HTTP/1.1" 404
+[32mINFO[0m:     [22-03-2025 22:13:17] ::1:50840 - "GET /favicon.ico HTTP/1.1" 404
+[32mINFO[0m:     [22-03-2025 22:14:02] ::1:50863 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:16:43] ::1:50911 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:17:34] ::1:50960 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:17:38] ::1:50960 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:11] ::1:51134 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:11] ::1:51135 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:11] ::1:51134 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:11] ::1:51135 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:11] ::1:51134 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:11] ::1:51135 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:11] ::1:51134 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:11] ::1:51135 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:17] ::1:51176 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:17] ::1:51178 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:17] ::1:51176 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:17] ::1:51178 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:17] ::1:51176 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:17] ::1:51178 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:17] ::1:51176 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/isuzu_knowledge HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:17] ::1:51178 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/30c68489-310a-4371-aa4e-3a0f73e8156d/count HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:20:56] ::1:51326 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:21:46] ::1:51360 - "GET /api/v1/heartbeat HTTP/1.1" 200
+[32mINFO[0m:     [22-03-2025 22:29:18] Shutting down
+[32mINFO[0m:     [22-03-2025 22:29:18] Waiting for application shutdown.
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component System
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component SegmentAPI
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component LocalExecutor
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component Posthog
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component SqliteDB
+[36mDEBUG[0m:    [22-03-2025 22:29:18] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [22-03-2025 22:29:18] Application shutdown complete.
+[32mINFO[0m:     [22-03-2025 22:29:18] Finished server process [[36m18472[0m]

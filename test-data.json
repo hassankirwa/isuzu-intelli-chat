@@ -1,0 +1,52 @@
+{
+  "name": "ISUZU F-Series Truck",
+  "type": "Commercial Vehicle",
+  "model": "FSR 33H",
+  "specifications": {
+    "engine": {
+      "model": "4HK1-TCC",
+      "type": "4-cylinder in-line with turbo intercooler",
+      "displacement": "5193cc",
+      "power": "154kW (210PS) @ 2600rpm",
+      "torque": "706Nm @ 1600-2600rpm"
+    },
+    "dimensions": {
+      "length": "8500mm",
+      "width": "2490mm",
+      "height": "2810mm",
+      "wheelbase": "5550mm",
+      "ground_clearance": "210mm"
+    },
+    "capacity": {
+      "gvw": "14500kg",
+      "payload": "9500kg",
+      "fuel_tank": "200L"
+    },
+    "transmission": {
+      "type": "6-speed manual",
+      "model": "MZW6P"
+    }
+  },
+  "features": [
+    "ABS with EBD",
+    "Air conditioning",
+    "Cruise control",
+    "Power windows",
+    "Central locking with remote",
+    "Adjustable steering column",
+    "Multi-information display"
+  ],
+  "warranty": "3 years or 100,000km",
+  "applications": [
+    "General cargo transportation",
+    "Construction material delivery",
+    "Refrigerated goods transportation",
+    "Delivery services",
+    "Municipal services"
+  ],
+  "availableColors": [
+    "Arctic White",
+    "Titanium Silver",
+    "Venetian Red"
+  ]
+} 
