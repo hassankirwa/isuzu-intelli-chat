@@ -26,37 +26,40 @@ ISUZU IntelliChat uses a dual-component architecture:
 ## Installation and Setup
 
 ### 1. Clone the Repository
+```
+git clone https://github.com/hassankirwa/isuzu-intelli-chat.git
 
-Apply to README.md  
-Run
+```
+
 
 ### 2. Frontend Setup (Next.js)
 
 Install dependencies:  
-Apply to README.md  
-Run  
+```
+npm install or npm install --legacy-peer-deps
 
-Create a `.env.local` file in the project root with:  
-Apply to README.md  
+```
+
+
+Run  
+```
+npm run dev
+```
 
 ### 3. Backend Setup (FastAPI)
 
-Navigate to the backend directory and set up a virtual environment:  
-Apply to README.md  
-Run  
+Navigate to the backend directory.
 
-Install backend dependencies:  
-Apply to README.md  
-Run  
+```
+cd backend
+```
+Go to `.env` file and replace 'your api key ' with your api key
 
-Create a `.env` file in the backend directory:  
-Apply to README.md  
+Install the required packages:
+   ```
+   pip install -r requirements.txt
+   ```
 
-### 4. Initialize Data Directories
-
-The system requires specific data directories to store documents and vector indexes:  
-Apply to README.md  
-Run  
 
 ## Running the Application
 
@@ -65,27 +68,35 @@ Run
 Apply to README.md  
 Run  
 
+```
+python main.py
+```
+
 The backend API will be available at `http://localhost:8000`
 
 ### Start the Frontend (Next.js)
 
 In a separate terminal:  
-Apply to README.md  
-Run  
+When in backend 
 
-The application will be available at `http://localhost:3000`
+```
+cd ..
+
+```
+ 
+Then Run  
+
+```
+npm run dev
+
+```
+Then Navigate to `http://localhost:3000/` in your browser
 
 ## Usage Guide
 
-### Admin Registration and Login
-
-**Register as an admin:**  
-Navigate to `http://localhost:3000/register`  
-Create admin account with confirmation code: `ISUZU-ADMIN-2024`
-
 **Login to the admin panel:**  
 Navigate to `http://localhost:3000/login`  
-Enter your admin credentials  
+Enter your admin credentials  admin admin123
 Access the admin dashboard at `http://localhost:3000/admin`
 
 ### Document Management
